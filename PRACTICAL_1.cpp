@@ -1,282 +1,178 @@
 // In this Practical we coverting the sorting algorithm present in cpp
-
 #include <iostream>
 using namespace std;
 
-// This is the function of Selection sort
-void SelectionSort(int arr[], int n){
-    for(int i = 0; i < n - 1; i++){
-        int Min = i;
-
-        for(int j = i + 1; j < n; j++){
-            if(arr[Min] > arr[j]){
-                Min = j;
-            }
+// Selection Sort
+void selectionSort(int arr[], int n)
+{
+    for(int i=0;i<n-1;i++)
+    {
+        int min=i;
+        for(int j=i+1;j<n;j++)
+        {
+            if(arr[j]<arr[min])
+                min=j;
         }
-        swap(arr[Min], arr[i]);
+        swap(arr[i],arr[min]);
     }
 }
 
-// This is the function of Bubble sort
-void BubbleSort(int arr[], int n){
-    for(int i = 1; i < n; i++){
-        bool swapped = false;
+// Insertion Sort
+void insertionSort(int arr[], int n)
+{
+    for(int i=1;i<n;i++)
+    {
+        int key=arr[i];
+        int j=i-1;
 
-        for(int j = 0; j < n - i; j++){
-            if(arr[j] > arr[j + 1]){
-                swap(arr[j], arr[j + 1]);
-                swapped = true;
-            }
-        }
-
-        if(swapped == false){
-            break;
-        }
-    }
-}
-
-// This is the function of Insertion sort
-void InsertionSort(int arr[], int n){
-
-    for(int i = 1; i < n; i++){
-
-        int temp = arr[i];
-        int j = i - 1;
-
-        while(j >= 0 && arr[j] > temp){
-            arr[j + 1] = arr[j];
+        while(j>=0 && arr[j]>key)
+        {
+            arr[j+1]=arr[j];
             j--;
         }
-
-        arr[j + 1] = temp;
+        arr[j+1]=key;
     }
 }
 
-// This is the function of Merge sort
-void Merge(int arr[], int s, int e){
-
-    int mid = s + (e - s) / 2;
-
-    int len1 = mid - s + 1;
-    int len2 = e - mid;
-
-    int *first = new int[len1];
-    int *second = new int[len2];
-
-    int mainArrayIndex = s;
-
-    for(int i = 0; i < len1; i++){
-        first[i] = arr[mainArrayIndex++];
-    }
-
-    for(int i = 0; i < len2; i++){
-        second[i] = arr[mainArrayIndex++];
-    }
-
-    int index1 = 0;
-    int index2 = 0;
-    mainArrayIndex = s;
-
-    while(index1 < len1 && index2 < len2){
-
-        if(first[index1] < second[index2]){
-            arr[mainArrayIndex++] = first[index1++];
-        }
-        else{
-            arr[mainArrayIndex++] = second[index2++];
+// Bubble Sort
+void bubbleSort(int arr[], int n)
+{
+    for(int i=0;i<n-1;i++)
+    {
+        for(int j=0;j<n-i-1;j++)
+        {
+            if(arr[j]>arr[j+1])
+                swap(arr[j],arr[j+1]);
         }
     }
-
-    while(index1 < len1){
-        arr[mainArrayIndex++] = first[index1++];
-    }
-
-    while(index2 < len2){
-        arr[mainArrayIndex++] = second[index2++];
-    }
-
-    delete[] first;
-    delete[] second;
 }
 
-void MergeSort(int arr[], int s, int e){
+// Merge Sort
+void merge(int arr[], int l, int m, int r)
+{
+    int n1=m-l+1;
+    int n2=r-m;
 
-    if(s >= e){
-        return;
+    int L[n1],R[n2];
+
+    for(int i=0;i<n1;i++)
+        L[i]=arr[l+i];
+
+    for(int j=0;j<n2;j++)
+        R[j]=arr[m+1+j];
+
+    int i=0,j=0,k=l;
+
+    while(i<n1 && j<n2)
+    {
+        if(L[i]<=R[j])
+            arr[k++]=L[i++];
+        else
+            arr[k++]=R[j++];
     }
 
-    int mid = s + (e - s) / 2;
+    while(i<n1)
+        arr[k++]=L[i++];
 
-    MergeSort(arr, s, mid);
-    MergeSort(arr, mid + 1, e);
-
-    Merge(arr, s, e);
+    while(j<n2)
+        arr[k++]=R[j++];
 }
 
-// This is the function of Quick sort
-int Partition(int arr[], int s, int e){
-
-    int pivot = arr[s];
-
-    int count = 0;
-
-    for(int i = s + 1; i <= e; i++){
-        if(arr[i] <= pivot){
-            count++;
-        }
+void mergeSort(int arr[], int l, int r)
+{
+    if(l<r)
+    {
+        int m=(l+r)/2;
+        mergeSort(arr,l,m);
+        mergeSort(arr,m+1,r);
+        merge(arr,l,m,r);
     }
+}
 
-    int pivotIndex = s + count;
+// Quick Sort
+int partition(int arr[], int low, int high)
+{
+    int pivot=arr[high];
+    int i=low-1;
 
-    swap(arr[pivotIndex], arr[s]);
-
-    int i = s;
-    int j = e;
-
-    while(i < pivotIndex && j > pivotIndex){
-
-        while(arr[i] <= pivot){
+    for(int j=low;j<high;j++)
+    {
+        if(arr[j]<pivot)
+        {
             i++;
-        }
-
-        while(arr[j] > pivot){
-            j--;
-        }
-
-        if(i < pivotIndex && j > pivotIndex){
-            swap(arr[i++], arr[j--]);
+            swap(arr[i],arr[j]);
         }
     }
 
-    return pivotIndex;
+    swap(arr[i+1],arr[high]);
+    return i+1;
 }
 
-void QuickSort(int arr[], int s, int e){
-
-    if(s >= e){
-        return;
+void quickSort(int arr[], int low, int high)
+{
+    if(low<high)
+    {
+        int p=partition(arr,low,high);
+        quickSort(arr,low,p-1);
+        quickSort(arr,p+1,high);
     }
-
-    int p = Partition(arr, s, e);
-
-    QuickSort(arr, s, p - 1);
-    QuickSort(arr, p + 1, e);
 }
 
-// This function is used to print the Array Before Sorting
-void PrintingArrayBefore(int arr[], int n){
-    cout << "Printing the Array Elements Before Sorting: ";
-    for(int i = 0; i < n; i++){
-        cout << arr[i] << " , ";
-    }
-    cout << endl;
+// Display
+void display(int arr[], int n)
+{
+    for(int i=0;i<n;i++)
+        cout<<arr[i]<<" ";
 }
 
-// This function is used to print the Array After Sorting
-void PrintingArray(int arr[], int n){
-    cout << "Printing the  Array Elements After Sorting: ";
-    for(int i = 0; i < n; i++){
-        cout << arr[i] << " , ";
+int main()
+{
+    int arr[100], n, choice;
+
+    cout<<"Enter number of elements: ";
+    cin>>n;
+
+    cout<<"Enter "<<n<<" elements:\n";
+    for(int i=0;i<n;i++)
+        cin>>arr[i];
+
+    cout<<"\n1. Selection Sort";
+    cout<<"\n2. Insertion Sort";
+    cout<<"\n3. Bubble Sort";
+    cout<<"\n4. Merge Sort";
+    cout<<"\n5. Quick Sort";
+    cout<<"\nEnter your choice: ";
+    cin>>choice;
+
+    switch(choice)
+    {
+        case 1:
+            selectionSort(arr,n);
+            break;
+
+        case 2:
+            insertionSort(arr,n);
+            break;
+
+        case 3:
+            bubbleSort(arr,n);
+            break;
+
+        case 4:
+            mergeSort(arr,0,n-1);
+            break;
+
+        case 5:
+            quickSort(arr,0,n-1);
+            break;
+
+        default:
+            cout<<"Invalid Choice";
+            return 0;
     }
-    cout << endl;
-}
 
-int main(){
-
-    //while(1){
-
-        int n, choice;
-
-        cout << "Enter the size of array: ";
-        cin >> n;
-
-        const int MAX_SIZE = 100;
-        int arr[MAX_SIZE];
-
-        cout << "Enter the elements of array : ";
-        for(int i = 0; i < n; i++){
-            cin >> arr[i];
-        }
-
-        // Developing a user level selection for Sorting
-    while(1){
-        cout << "\n\n><====================================================================><\n";
-        cout << "1.Selection Sort\n";
-        cout << "2.Insertion Sort\n";
-        cout << "3.Bubble Sort\n";
-        cout << "4.Merge Sort\n";
-        cout << "5.Quick Sort\n";
-        cout << "6.Exit the Program..\n\n";
-
-        cout << "Enter Your choice (1-6) :- ";
-        cin >> choice;
-
-        switch(choice){
-
-            case 1:
-                cout << endl;
-                PrintingArrayBefore(arr, n);
-                cout << endl;
-                cout << "We are sorting the Array with the help of Selection Sort.\n";
-                SelectionSort(arr, n);
-                cout << endl;
-                PrintingArray(arr, n);
-                cout << endl;
-                break;
-
-            case 2:
-                cout << endl;
-                PrintingArrayBefore(arr, n);
-                cout << endl;
-                cout << "We are sorting the Array with the help of Insertion Sort.\n";
-                InsertionSort(arr, n);
-                cout << endl;
-                PrintingArray(arr, n);
-                cout << endl;
-                break;
-
-            case 3:
-                cout << endl;
-                PrintingArrayBefore(arr, n);
-                cout << endl;
-                cout << "We are sorting the Array with the help of Bubble Sort.\n";
-                BubbleSort(arr, n);
-                cout << endl;
-                PrintingArray(arr, n);
-                cout << endl;
-                break;
-
-            case 4:
-                cout << endl;
-                PrintingArrayBefore(arr, n);
-                cout << endl;
-                cout << "We are sorting the Array with the help of Merge Sort.\n";
-                MergeSort(arr, 0, n - 1);
-                cout << endl;
-                PrintingArray(arr, n);
-                cout << endl;
-                break;
-
-            case 5:
-                cout << endl;
-                PrintingArrayBefore(arr, n);
-                cout << endl;
-                cout << "We are sorting the Array with the help of Quick Sort.\n";
-                QuickSort(arr, 0, n - 1);
-                cout << endl;
-                PrintingArray(arr, n);
-                cout << endl;
-                break;
-
-            case 6:
-                cout << "You are Exiting the Program.........." << endl;
-                cout << "Thanking you..............." << endl;
-                return 0;
-
-            default:
-                cout << "Enter a Valid choice..\n\n";
-        }
-    }
+    cout<<"\nSorted Array: ";
+    display(arr,n);
 
     return 0;
 }
