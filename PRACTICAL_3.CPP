@@ -4,7 +4,6 @@ using namespace std;
 void maxHeapify(int arr[], int n, int i) {
 
     int largest = i;
-
     int left = 2 * i + 1;
     int right = 2 * i + 2;
 
@@ -15,7 +14,6 @@ void maxHeapify(int arr[], int n, int i) {
         largest = right;
 
     if (largest != i) {
-
         int temp = arr[i];
         arr[i] = arr[largest];
         arr[largest] = temp;
@@ -60,7 +58,7 @@ int main() {
     printf("\nOriginal array: ");
     printArray(arr, n);
     maxHeapSort(arr, n);
-    printf("Array  Max Heap Sort: ");
+    printf("Max Heap Sort: ");
     printArray(arr, n);
 }
     return 0;
